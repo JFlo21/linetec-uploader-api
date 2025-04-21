@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 import psycopg2
 from psycopg2.extras import execute_values
 
-DATABASE_URL = os.environ.get("postgresql://cognos_database_user:Y6b40zirOK7B0BZCETcruwqcLQXTCibE@dpg-d019vqbuibrs73ahvbhg-a.virginia-postgres.render.com/cognos_database")
+DATABASE_URL = os.environ.get("Cognos_Database")
 
 app = Flask(__name__)
 
@@ -52,4 +52,4 @@ def health_check():
     return "Linetec Uploader API is live!"
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=10000)
+    app.run(host="0.0.0.0", port=10000)
