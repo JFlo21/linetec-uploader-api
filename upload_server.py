@@ -14,14 +14,7 @@ def upload():
         if not isinstance(data, list):
             return jsonify({"error": "Expected a list of records"}), 400
 
-        conn = psycopg2.connect(
-    host="dpg-d019vqbuibrs73ahvbhg-a.virginia-postgres.render.com",
-    port=5432,
-    dbname="cognos_database",
-    user="cognos_database_user",
-    password="Y6b40zirOK7B0BZCETcruwqcLQXTCibE",
-    sslmode="require"
-)
+        conn = psycopg2.connect("Cognos_Database")
 
         cursor = conn.cursor()
 
