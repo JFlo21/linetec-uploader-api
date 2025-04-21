@@ -3,18 +3,6 @@ from flask import Flask, request, jsonify
 import psycopg2
 from psycopg2.extras import execute_values
 
-Cognos_Database = os.environ.get(
-    dbname="cognos_database",
-    user="cognos_database_user",
-    password="Y6b40zirOK7B0BZCETcruwqcLQXTCibE",
-    host="dpg-d019vqbuibrs73ahvbhg-a.virginia-postgres.render.com",
-    port=5432,
-    sslmode="require",
-    sslrootcert=None,
-    sslcert=None,
-    sslkey=None,
-    )
-
 app = Flask(__name__)
 
 @app.route("/upload", methods=["POST"])
