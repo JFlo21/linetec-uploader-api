@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 import psycopg2
 from psycopg2.extras import execute_values
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
+DATABASE_URL = os.environ.get("postgresql://cognos_database_user:Y6b40zirOK7B0BZCETcruwqcLQXTCibE@dpg-d019vqbuibrs73ahvbhg-a/cognos_database")
 
 app = Flask(__name__)
 
