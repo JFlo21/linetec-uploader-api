@@ -63,4 +63,4 @@ def health_check():
     return "Linetec Uploader API is live!"
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    app.run(host="216.24.60.0/24", port=10000)
