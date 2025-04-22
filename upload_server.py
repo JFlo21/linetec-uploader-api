@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 import psycopg2
 from psycopg2.extras import execute_values
 
-Cognos_Database = os.environ.get("postgresql://cognos_database_user:Y6b40zirOK7B0BZCETcruwqcLQXTCibE@dpg-d019vqbuibrs73ahvbhg-a.virginia-postgres.render.com/cognos_database")
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 app = Flask(__name__)
 
@@ -14,17 +14,7 @@ def upload():
         if not isinstance(data, list):
             return jsonify({"error": "Expected a list of records"}), 400
 
-        conn = psycopg2.connect(
-    dbname="cognos_database",
-    user="cognos_database_user",
-    password="Y6b40zirOK7B0BZCETcruwqcLQXTCibE",
-    host="dpg-d019vqbuibrs73ahvbhg-a.virginia-postgres.render.com",
-    port=5432,
-    sslmode="require",
-    sslrootcert=None,
-    sslcert=None,
-    sslkey=None,
-)
+        conn = psycopg2.connect(DATABASE_URL, sslmode="require")
 
         cursor = conn.cursor()
 
