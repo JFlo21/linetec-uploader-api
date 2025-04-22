@@ -1,11 +1,13 @@
-import traceback
 import os
-import traceback  # ✅ For full error logging
+import traceback
 from flask import Flask, request, jsonify
-import psycopg2  # ✅ PostgreSQL connection
-from psycopg2.extras import execute_values  # ✅ Efficient batch insert
+import psycopg2
+from psycopg2.extras import execute_values
 
+# ✅ Initialize Flask app at the top
+app = Flask(__name__)
 
+# ✅ Route definitions go below the app declaration
 @app.route("/upload", methods=["POST"])
 def upload():
     try:
@@ -17,7 +19,6 @@ def upload():
         conn = psycopg2.connect(DATABASE_URL, sslmode="require")
 
         cursor = conn.cursor()
-
         values = [
             (
                 int(row["Project ID"]),
@@ -30,8 +31,6 @@ def upload():
             )
             for row in data
         ]
-
-        print("Payload:", values)  # ✅ Debug print
 
         insert_query = """
         INSERT INTO work_uploads (
@@ -49,5 +48,14 @@ def upload():
 
     except Exception as e:
         traceback_str = traceback.format_exc()
-        print("Upload failed:", traceback_str)  # ✅ Log full stack trace
+        print("Upload failed:", traceback_str)
         return jsonify({"error": str(e), "trace": traceback_str}), 500
+
+@app.route("/", methods=["GET"])
+def health_check():
+    return "Linetec Uploader API is live!"
+
+# ✅ Required for local development and gunicorn compatibility
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
+
