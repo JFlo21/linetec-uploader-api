@@ -1,35 +1,42 @@
 import os
 import traceback
+import urllib.parse as urlparse
 from flask import Flask, request, jsonify
 import psycopg2
 from psycopg2.extras import execute_values
 
-# ✅ Create Flask app
+# ✅ Initialize Flask app
 app = Flask(__name__)
 
-# ✅ Upload route
+# ✅ Upload endpoint
 @app.route("/upload", methods=["POST"])
 def upload():
     try:
-        # ✅ Validate input
         data = request.get_json()
         if not isinstance(data, list):
             return jsonify({"error": "Expected a list of records"}), 400
 
-        # ✅ Get and validate DATABASE_URL
+        # ✅ Get the DATABASE_URL from environment
         DATABASE_URL = os.environ.get("DATABASE_URL")
         if not DATABASE_URL:
             raise Exception("DATABASE_URL environment variable not set")
 
-        # ✅ Append SSL mode if not already included
-        if "sslmode=" not in DATABASE_URL:
-            DATABASE_URL += "?sslmode=require"
+        # ✅ Parse the URL to extract connection pieces
+        url = urlparse.urlparse(DATABASE_URL)
 
-        # ✅ Connect to PostgreSQL
-        conn = psycopg2.connect(DATABASE_URL)
+        # ✅ Connect using individual components + sslmode=require
+        conn = psycopg2.connect(
+            dbname=url.path[1:],
+            user=url.username,
+            password=url.password,
+            host=url.hostname,
+            port=url.port,
+            sslmode="require"
+        )
+
         cursor = conn.cursor()
 
-        # ✅ Prepare values for batch insert
+        # ✅ Build insert values
         values = [
             (
                 int(row["Project ID"]),
@@ -43,7 +50,6 @@ def upload():
             for row in data
         ]
 
-        # ✅ SQL insert query
         insert_query = """
         INSERT INTO work_uploads (
             project_id, work_type, quantity, description,
@@ -68,8 +74,6 @@ def upload():
 def health_check():
     return "✅ Linetec Uploader API is live!"
 
-# ✅ Entry point for local and gunicorn
+# ✅ Entry point for local testing or gunicorn
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
-
-
