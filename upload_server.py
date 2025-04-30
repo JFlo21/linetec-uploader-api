@@ -45,7 +45,9 @@ def upload():
                 row["Description"],
                 row["CU Code"],
                 row["Location ID"],
-                row["Work Order #"]
+                row["Work Order #"],
+                row["Work Request #"],
+                row["District"]
             )
             for row in data
         ]
@@ -53,7 +55,8 @@ def upload():
         insert_query = """
         INSERT INTO work_uploads (
             project_id, work_type, quantity, description,
-            cu_code, location_id, work_order
+            cu_code, location_id, work_order,
+            work_request, district
         ) VALUES %s
         """
 
@@ -77,3 +80,4 @@ def health_check():
 # ✅ Entry point for local testing or gunicorn
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
+
