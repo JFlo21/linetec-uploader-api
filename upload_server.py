@@ -36,10 +36,10 @@ def upload():
 
         cursor = conn.cursor()
 
-        # ✅ Build insert values
+        # ✅ Build insert values (no int() on project_id)
         values = [
             (
-                int(row["Project ID"]),
+                row["Project ID"],
                 row["Work Type"],
                 int(row["Quantity"]),
                 row["Description"],
@@ -80,4 +80,3 @@ def health_check():
 # ✅ Entry point for local testing or gunicorn
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
-
