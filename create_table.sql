@@ -1,6 +1,6 @@
 CREATE TABLE work_uploads (
     id SERIAL PRIMARY KEY,
-    project_id INTEGER,
+    project_id TEXT,
     work_type TEXT,
     quantity INTEGER,
     description TEXT,

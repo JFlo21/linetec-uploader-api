@@ -73,37 +73,25 @@ def upload():
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # Define the columns in the order they appear in your values tuple
-        columns = [
-            "project_id", "work_type", "quantity", "description",
-            "cu_code", "location_id", "work_order",
-            "work_request", "district"
-        ]
-        
-        # Build insert values
+        # ✅ Build insert values
         values = [
             (
-                row.get("Project ID"),
-                row.get("Work Type"),
-                int(row.get("Quantity")),
-                row.get("Description"),
-                row.get("CU Code"),
-                row.get("Location ID"),
-                row.get("Work Order #"),
-                row.get("Work Request #"),
-                row.get("District")
+                int(row["Project ID"]),
+                row["Work Type"],
+                int(row["Quantity"]),
+                row["Description"],
+                row["CU Code"],
+                row["Location ID"],
+                row["Work Order #"]
             )
             for row in data
         ]
 
-        # --- SQL Safeguard ---
-        # This query will attempt to insert new rows. If a row with the same
-        # unique key (as defined in your database) already exists, it will do nothing
-        # instead of throwing an error. This is the final line of defense against duplicates.
-        insert_query = f"""
-            INSERT INTO work_uploads ({', '.join(columns)})
-            VALUES %s
-            ON CONFLICT (work_order, location_id, cu_code, work_type) DO NOTHING;
+        insert_query = """
+        INSERT INTO work_uploads (
+            project_id, work_type, quantity, description,
+            cu_code, location_id, work_order
+        ) VALUES %s
         """
 
         execute_values(cursor, insert_query, values)
