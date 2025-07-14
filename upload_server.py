@@ -76,7 +76,7 @@ def upload():
         # ✅ Build insert values
         values = [
             (
-                int(row["Project ID"]),
+                row["Project ID"],
                 row["Work Type"],
                 int(row["Quantity"]),
                 row["Description"],
