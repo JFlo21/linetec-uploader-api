@@ -79,33 +79,19 @@ def upload():
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # ✅ Build insert values with proper error handling
-        values = []
-        for row in data:
-            try:
-                # Handle project_id - it might be empty string or None
-                project_id = row.get("project_id", "")
-                if project_id and project_id.strip():
-                    # If project_id is a string like "R25P6", we need to handle it properly
-                    # For now, let's assume it should be stored as string, not int
-                    # If you need it as int, you'll need to extract numbers from it
-                    project_id_value = project_id.strip()
-                else:
-                    project_id_value = ""
-                
-                values.append((
-                    project_id_value,  # Store as string for now
-                    row["work_type"],
-                    int(row["quantity"]),
-                    row["description"],
-                    row["cu_code"],
-                    row["location_id"],
-                    row["work_order"]
-                ))
-            except KeyError as e:
-                return jsonify({"error": f"Missing required field: {e}"}), 400
-            except ValueError as e:
-                return jsonify({"error": f"Invalid data format: {e}"}), 400
+        # ✅ Build insert values
+        values = [
+            (
+                int(row["Project ID"]),
+                row["Work Type"],
+                int(row["Quantity"]),
+                row["Description"],
+                row["CU Code"],
+                row["Location ID"],
+                row["Work Order #"]
+            )
+            for row in data
+        ]
 
         insert_query = """
         INSERT INTO work_uploads (
