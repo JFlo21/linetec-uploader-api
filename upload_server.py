@@ -219,7 +219,10 @@ def upload():
         """
 
         execute_values(cursor, insert_query, values)
-        rows_affected = cursor.rowcount
+        # execute_values sends the rows in pages of 100, and cursor.rowcount holds
+        # only the last page (1 for 401 rows). Every row in `values` was inserted,
+        # or the statement raised and nothing is committed.
+        rows_affected = len(values)
         
         print(f"DATABASE INSERTION COMPLETED:")
         print(f"  Records successfully inserted: {rows_affected}")
